@@ -35,22 +35,18 @@ public class MainActivity extends AppCompatActivity implements ApiListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //initialize retrofit client
+        mRetrofitClient = RetrofitClient.getClientInstance(getApplicationContext());
 
-        mRetrofitClient = RetrofitClient.getClientInstance(this);
         mRecyclerView = findViewById(R.id.rv_answers);
 
         mAdapter = new AnswersAdapter(this, new ArrayList<Item>(0), new AnswersAdapter.PostItemListener() {
 
             @Override
             public void onPostClick(long id, String usertype, String imageUrl) {
-                Toast.makeText(MainActivity.this, "Post id is" + id, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "Post id is" + id, Toast.LENGTH_SHORT).show();
                 loadDialog(imageUrl, usertype, id);
             }
-
-           /* @Override
-            public void onPostClick(long id) {
-                Toast.makeText(MainActivity.this, "Post id is" + id, Toast.LENGTH_SHORT).show();
-            }*/
         });
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
