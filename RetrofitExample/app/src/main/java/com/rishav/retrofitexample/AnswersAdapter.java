@@ -1,7 +1,7 @@
-package com.example.shivi.retrofitexample;
+package com.rishav.retrofitexample;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +79,6 @@ public class AnswersAdapter extends RecyclerView.Adapter<AnswersAdapter.ViewHold
     }
     //interface
     public interface PostItemListener {
-        void onPostClick(long id,String usertype,String imageUrl);
+        void onPostClick(long id, String usertype, String imageUrl);
     }
 }

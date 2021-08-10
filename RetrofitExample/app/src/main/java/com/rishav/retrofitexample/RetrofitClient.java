@@ -1,10 +1,10 @@
-package com.example.shivi.retrofitexample;
+package com.rishav.retrofitexample;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by Shivi on 4/12/2018.
+ * Created by Rishav on 4/12/2018.
  */
 
 public class RetrofitClient {
