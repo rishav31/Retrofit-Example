@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
         dialog.setCancelable(true);
     }
+
     private void showErrorMessage() {
         System.out.println("Error");
     }
