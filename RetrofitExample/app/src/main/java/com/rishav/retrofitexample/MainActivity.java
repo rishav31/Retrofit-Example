@@ -8,7 +8,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import com.rishav.retrofitexample.adapters.AnswersAdapter;
+import com.rishav.retrofitexample.listener.ApiListener;
+import com.rishav.retrofitexample.model.Item;
+import com.rishav.retrofitexample.model.Result;
+import com.rishav.retrofitexample.model.SOAnswersResponse;
+import com.rishav.retrofitexample.networkService.RetrofitClient;
+import com.rishav.retrofitexample.networkService.SOService;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -17,15 +23,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ApiListener {
 
     private AnswersAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private SOService mService;
+    private RetrofitClient mRetrofitClient;
     public Context context = MainActivity.this;
 
     @Override
@@ -33,15 +36,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mService = ApiUtils.getSOService();
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_answers);
+        mRetrofitClient = RetrofitClient.getClientInstance(this);
+        mRecyclerView = findViewById(R.id.rv_answers);
 
         mAdapter = new AnswersAdapter(this, new ArrayList<Item>(0), new AnswersAdapter.PostItemListener() {
 
             @Override
             public void onPostClick(long id, String usertype, String imageUrl) {
                 Toast.makeText(MainActivity.this, "Post id is" + id, Toast.LENGTH_SHORT).show();
-                loadDialog(imageUrl,usertype,id);
+                loadDialog(imageUrl, usertype, id);
             }
 
            /* @Override
@@ -57,33 +60,11 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
 
-        loadAnswers();
+        mRetrofitClient.loadAnswers();
     }
 
-    public void loadAnswers() {
-        mService.getAnswers().enqueue(new Callback<SOAnswersResponse>() {
-            @Override
-            public void onResponse(Call<SOAnswersResponse> call, Response<SOAnswersResponse> response) {
 
-                if(response.isSuccessful()) {
-                    mAdapter.updateAnswers(response.body().getItems());
-                    Log.d("MainActivity", "posts loaded from API");
-                }else {
-                    int statusCode  = response.code();
-                    // handle request errors depending on status code
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SOAnswersResponse> call, Throwable t) {
-                showErrorMessage();
-                Log.d("MainActivity", "error loading from API");
-
-            }
-        });
-    }
-
-    public  void loadDialog(String url,String userType,long userId){
+    private void loadDialog(String url, String userType, long userId) {
         // Create custom dialog object
         final Dialog dialog = new Dialog(context);
         // Include dialog.xml file
@@ -91,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         // Set dialog title
         dialog.setTitle("Profile");
 
-        ImageView imageView =  dialog.findViewById(R.id.image);
+        ImageView imageView = dialog.findViewById(R.id.image);
         TextView textView = dialog.findViewById(R.id.userType);
 
         Picasso.get()
@@ -104,7 +85,33 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(true);
     }
 
-    private void showErrorMessage() {
-        System.out.println("Error");
+    private void showErrorMessage(String url_type, String message) {
+        System.out.println("Error: " + url_type);
+        Log.d(MainActivity.class.getSimpleName(), message);
+    }
+
+    @Override
+    public void onSuccessResponse(int id, Result data) {
+        switch (id) {
+            case SOService.answers:
+                SOAnswersResponse response = (SOAnswersResponse) data.getData();
+                mAdapter.updateAnswers(response.getItems());
+                Log.d("MainActivity", "posts loaded from API");
+                break;
+            case SOService.answer_tags:
+                break;
+        }
+    }
+
+    @Override
+    public void onFailureResponse(int id, Result data) {
+        switch (id) {
+            case SOService.answers:
+                showErrorMessage("Answers", (String) data.getData());
+                break;
+            case SOService.answer_tags:
+                showErrorMessage("Answers with tag", (String) data.getData());
+                break;
+        }
     }
 }

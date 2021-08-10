@@ -1,4 +1,4 @@
-package com.rishav.retrofitexample;
+package com.rishav.retrofitexample.model;
 
 /**
  * Created by Rishav on 4/12/2018.

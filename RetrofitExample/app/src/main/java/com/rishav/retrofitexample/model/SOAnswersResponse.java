@@ -1,4 +1,4 @@
-package com.rishav.retrofitexample;
+package com.rishav.retrofitexample.model;
 
 /**
  * Created by Rishav on 4/12/2018.
@@ -6,10 +6,12 @@ package com.rishav.retrofitexample;
 
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.rishav.retrofitexample.model.Item;
 
-public class SOAnswersResponse  {
+public class SOAnswersResponse {
 
     @SerializedName("items")
     @Expose

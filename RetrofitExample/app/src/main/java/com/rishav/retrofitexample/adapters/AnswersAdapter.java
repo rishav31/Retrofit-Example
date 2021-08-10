@@ -1,11 +1,15 @@
-package com.rishav.retrofitexample;
+package com.rishav.retrofitexample.adapters;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.rishav.retrofitexample.model.Item;
 
 import java.util.List;
 
@@ -29,7 +33,6 @@ public class AnswersAdapter extends RecyclerView.Adapter<AnswersAdapter.ViewHold
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
         View postView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(postView, this.mItemListener);
@@ -52,6 +55,7 @@ public class AnswersAdapter extends RecyclerView.Adapter<AnswersAdapter.ViewHold
 
         public TextView titleTv;
         PostItemListener mItemListener;
+
         public ViewHolder(View itemView, PostItemListener postItemListener) {
             super(itemView);
             titleTv = itemView.findViewById(android.R.id.text1);
@@ -63,7 +67,7 @@ public class AnswersAdapter extends RecyclerView.Adapter<AnswersAdapter.ViewHold
         @Override
         public void onClick(View v) {
             Item item = getItem(getAdapterPosition());
-            this.mItemListener.onPostClick(item.getOwner().getUserId(),item.getOwner().getUserType(),item.getOwner().getProfileImage());
+            this.mItemListener.onPostClick(item.getOwner().getUserId(), item.getOwner().getUserType(), item.getOwner().getProfileImage());
 
             notifyDataSetChanged();
         }
@@ -77,6 +81,7 @@ public class AnswersAdapter extends RecyclerView.Adapter<AnswersAdapter.ViewHold
     private Item getItem(int adapterPosition) {
         return mItems.get(adapterPosition);
     }
+
     //interface
     public interface PostItemListener {
         void onPostClick(long id, String usertype, String imageUrl);
