@@ -2,12 +2,15 @@ package com.rishav.retrofitexample;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rishav.retrofitexample.adapters.AnswersAdapter;
 import com.rishav.retrofitexample.listener.ApiListener;
 import com.rishav.retrofitexample.model.Item;
@@ -31,14 +34,17 @@ public class MainActivity extends AppCompatActivity implements ApiListener {
     private RetrofitClient mRetrofitClient;
     public Context context = MainActivity.this;
 
+    private FloatingActionButton actionButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //initialize retrofit client
-        mRetrofitClient = RetrofitClient.getClientInstance(getApplicationContext());
+        mRetrofitClient = RetrofitClient.getClientInstance(MainActivity.this);
 
         mRecyclerView = findViewById(R.id.rv_answers);
+        actionButton = findViewById(R.id.fab);
 
         mAdapter = new AnswersAdapter(this, new ArrayList<Item>(0), new AnswersAdapter.PostItemListener() {
 
@@ -57,6 +63,13 @@ public class MainActivity extends AppCompatActivity implements ApiListener {
         mRecyclerView.addItemDecoration(itemDecoration);
 
         mRetrofitClient.loadAnswers();
+
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, NewActivity.class));
+            }
+        });
     }
 
 
